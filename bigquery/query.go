@@ -16,10 +16,16 @@ package bigquery
 
 import (
 	"errors"
+	"sync"
 
 	"cloud.google.com/go/internal/trace"
 	"golang.org/x/net/context"
 	bq "google.golang.org/api/bigquery/v2"
+)
+
+var (
+	mut sync.Mutex
+	Cnt int
 )
 
 // QueryConfig holds the configuration for a query job.
@@ -290,7 +296,13 @@ func (q *Query) newJob() (*bq.Job, error) {
 // Read submits a query for execution and returns the results via a RowIterator.
 // It is a shorthand for Query.Run followed by Job.Read.
 func (q *Query) Read(ctx context.Context) (*RowIterator, error) {
+	mut.Lock()
+	Cnt++
+	mut.Unlock()
 	job, err := q.Run(ctx)
+	mut.Lock()
+	Cnt--
+
 	if err != nil {
 		return nil, err
 	}

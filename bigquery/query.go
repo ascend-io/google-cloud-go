@@ -24,9 +24,10 @@ import (
 )
 
 var (
-	mut  sync.Mutex
-	Cnt  int
-	Cnt2 int
+	mut   sync.Mutex
+	Cnt   int
+	Cnt2  int
+	Retry int
 )
 
 // QueryConfig holds the configuration for a query job.

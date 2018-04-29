@@ -132,19 +132,26 @@ func unixMillisToTime(m int64) time.Time {
 // See the similar function in ../storage/invoke.go. The main difference is the
 // reason for retrying.
 func runWithRetry(ctx context.Context, call func() error) error {
+	mut.Lock()
+	Retry++
+	mut.Unlock()
 	// These parameters match the suggestions in https://cloud.google.com/bigquery/sla.
 	backoff := gax.Backoff{
 		Initial:    1 * time.Second,
 		Max:        32 * time.Second,
 		Multiplier: 2,
 	}
-	return internal.Retry(ctx, backoff, func() (stop bool, err error) {
+	res := internal.Retry(ctx, backoff, func() (stop bool, err error) {
 		err = call()
 		if err == nil {
 			return true, nil
 		}
 		return !retryableError(err), err
 	})
+	mut.Lock()
+	Retry--
+	mut.Unlock()
+	return res
 }
 
 // This is the correct definition of retryable according to the BigQuery team.

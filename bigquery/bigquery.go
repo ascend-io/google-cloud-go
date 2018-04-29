@@ -157,7 +157,7 @@ func runWithRetry(ctx context.Context, call func() error) error {
 // This is the correct definition of retryable according to the BigQuery team.
 func retryableError(err error) bool {
 	e, ok := err.(*googleapi.Error)
-	fmt.Println("zzzzz error: ", e)
+	fmt.Println("zzzzz error: ", err, ok, err == nil)
 	if !ok {
 		return false
 	}

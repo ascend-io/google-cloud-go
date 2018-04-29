@@ -24,8 +24,9 @@ import (
 )
 
 var (
-	mut sync.Mutex
-	Cnt int
+	mut  sync.Mutex
+	Cnt  int
+	Cnt2 int
 )
 
 // QueryConfig holds the configuration for a query job.
@@ -302,9 +303,18 @@ func (q *Query) Read(ctx context.Context) (*RowIterator, error) {
 	job, err := q.Run(ctx)
 	mut.Lock()
 	Cnt--
+	mut.Unlock()
 
 	if err != nil {
 		return nil, err
 	}
-	return job.Read(ctx)
+
+	mut.Lock()
+	Cnt2++
+	mut.Unlock()
+	it, err := job.Read(ctx)
+	mut.Lock()
+	Cnt2--
+	mut.Unlock()
+	return it, err
 }

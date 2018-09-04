@@ -99,6 +99,11 @@ func (c *Client) insertJob(ctx context.Context, job *bq.Job, media io.Reader) (*
 	var err error
 	invoke := func() error {
 		res, err = call.Do()
+		if err != nil {
+			glog.Info("zzzzzz success")
+		} else {
+			glog.Info("fail success")
+		}
 		return err
 	}
 	// A job with a client-generated ID can be retried; the presence of the

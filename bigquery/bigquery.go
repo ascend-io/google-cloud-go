@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 
 	gax "github.com/googleapis/gax-go"
@@ -100,12 +101,17 @@ func (c *Client) insertJob(ctx context.Context, job *bq.Job, media io.Reader) (*
 	var res *bq.Job
 	var err error
 	invoke := func() error {
+		t := time.Now()
 		res, err = call.Do()
-		if err != nil {
-			glog.Info("zzzzzz success")
-		} else {
-			glog.Info("fail success")
+
+		if os.Getenv("BQ_LOG_RETRY_API") == "true" {
+			if err != nil {
+				glog.Infof("bq insert job(%s) success: time elapses: %v", job.Id, time.Since(t).Seconds())
+			} else {
+				glog.Infof("bq insert job(%s) failed: time elapses: %v: message: %s", job.Id, time.Since(t).Seconds(), err.Error())
+			}
 		}
+
 		return err
 	}
 	// A job with a client-generated ID can be retried; the presence of the

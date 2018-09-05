@@ -171,7 +171,7 @@ func fetchPage(ctx context.Context, t *Table, schema Schema, startIndex uint64, 
 		go func() {
 			var bqt *bq.Table
 			err := runWithRetry(ctx, func() (err error) {
-				t := time.Now()
+				ts := time.Now()
 				bqt, err = t.c.bqs.Tables.Get(t.ProjectID, t.DatasetID, t.TableID).
 					Fields("schema").
 					Context(ctx).
@@ -179,9 +179,9 @@ func fetchPage(ctx context.Context, t *Table, schema Schema, startIndex uint64, 
 
 				if os.Getenv("BQ_LOG_RETRY_API") == "true" {
 					if err != nil {
-						glog.Infof("bq fetch page(%s) success: time elapses: %v", pageToken, time.Since(t).Seconds())
+						glog.Infof("bq fetch page(%s) success: time elapses: %v", pageToken, time.Since(ts).Seconds())
 					} else {
-						glog.Infof("bq fetch page(%s) failed: time elapses: %v: message: %s", pageToken, time.Since(t).Seconds(), err.Error())
+						glog.Infof("bq fetch page(%s) failed: time elapses: %v: message: %s", pageToken, time.Since(ts).Seconds(), err.Error())
 					}
 				}
 

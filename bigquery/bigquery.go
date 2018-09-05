@@ -106,9 +106,9 @@ func (c *Client) insertJob(ctx context.Context, job *bq.Job, media io.Reader) (*
 
 		if os.Getenv("BQ_LOG_RETRY_API") == "true" {
 			if err != nil {
-				glog.Infof("bq insert job(%s) success: time elapses: %v", job.Id, time.Since(t).Seconds())
+				glog.Infof("bq insert job success: time elapses: %v", time.Since(t).Seconds())
 			} else {
-				glog.Infof("bq insert job(%s) failed: time elapses: %v: message: %s", job.Id, time.Since(t).Seconds(), err.Error())
+				glog.Infof("bq insert job failed: time elapses: %v: message: %s", time.Since(t).Seconds(), err.Error())
 			}
 		}
 

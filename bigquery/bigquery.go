@@ -22,6 +22,8 @@ import (
 
 	gax "github.com/googleapis/gax-go"
 
+	"github.com/golang/glog"
+
 	"cloud.google.com/go/internal"
 	"cloud.google.com/go/internal/version"
 

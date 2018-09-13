@@ -178,7 +178,7 @@ func fetchPage(ctx context.Context, t *Table, schema Schema, startIndex uint64, 
 					Do()
 
 				if os.Getenv("BQ_LOG_RETRY_API") == "true" {
-					if err != nil {
+					if err == nil {
 						glog.Infof("bq fetch page(%s) success: time elapses: %v", pageToken, time.Since(ts).Seconds())
 					} else {
 						glog.Infof("bq fetch page(%s) failed: time elapses: %v: message: %s", pageToken, time.Since(ts).Seconds(), err.Error())
